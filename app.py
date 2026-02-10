@@ -17,20 +17,33 @@ def index():
 
 @app.route("/upload", methods=["POST"])
 def upload_audio():
-    file = request.files["audio"]
+    try:
+        file = request.files.get("audio")
 
-    if file:
+        if not file:
+            return jsonify({"error": "No audio file provided"}), 400
+
         filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
         file.save(filepath)
 
+        # We are NOT re-running Transcribe in production demo
+        # We reuse pre-generated transcript safely
+        transcript_path = "backend/clean_transcript.txt"
+
+        if not os.path.exists(transcript_path):
+            return jsonify({"error": "Transcript file not found on server"}), 500
+
+        transcript = open(transcript_path, "r", encoding="utf-8").read()
         report = generate_final_report()
 
         return jsonify({
-            "transcript": open("backend/clean_transcript.txt", "r", encoding="utf-8").read(),
+            "transcript": transcript,
             "report": report
         })
-    
-    return jsonify({"error" : "No file uploaded"}), 400
+
+    except Exception as e:
+        print("UPLOAD ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
