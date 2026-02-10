@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Sales Call Coach</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>AI-Powered Sales Call Review</h1>
+
+    <!-- Upload Section -->
+    <div class="card">
+        <h2>Upload Sales Call Audio</h2>
+        <input type="file" id="audioFile">
+        <button onclick="uploadAudio()">Analyze Call</button>
+    </div>
+
+    <!-- Transcript -->
+    <div class="card">
+        <h2>Transcript</h2>
+        <pre id="transcript">Upload an audio file to see transcript...</pre>
+    </div>
+
+    <!-- AI Analysis -->
+    <div class="card">
+        <h2>AI Sales Analysis</h2>
+        <pre id="analysis">AI insights will appear here...</pre>
+    </div>
+
+</div>
+
+<script src="/static/js/main.js"></script>
+</body>
+</html>
