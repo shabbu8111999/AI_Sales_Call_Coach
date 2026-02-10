@@ -1,8 +1,7 @@
-USE_MOCK = True
-
 import boto3
 import json
 
+USE_MOCK = True
 
 # Initializing Bedrock runtime client
 bedrock = boto3.client(
