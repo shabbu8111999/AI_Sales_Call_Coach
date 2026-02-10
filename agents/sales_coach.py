@@ -41,7 +41,7 @@ SALES BEST PRACTICES(FROM KNOWLEDGE BASE):
 
 
 if __name__ == "__main__":
-    transcript = load_transcript()
+    transcript_text = load_transcript()
     vector_db = load_rag()
 
     rag_context = query_sales_knowledge(
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     )
 
     if USE_MOCK:
-        output = sales_coach_analysis(transcript, rag_context)
+        output = sales_coach_analysis(transcript_text, rag_context)
     else:
         output = "Bedrock-based Sales Coach output"
 
