@@ -1,0 +1,16 @@
+import requests
+
+# pasting the TranscriptFileURI from the output of the Transcribe job
+TRANSCRIPT_URL = "https://s3.us-east-1.amazonaws.com/aws-transcribe-us-east-1-prod/211125557689/sales-call-transcription-job/92ad8879-25ea-4d2d-97aa-f3d701dab13b/asrOutput.json?X-Amz-Security-Token=IQoJb3JpZ2luX2VjENb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIF3eh00jdFi1l%2FHZev2dOadNtC%2BmJIB3J12JZ%2BcsTxqwAiA4Q%2FDEMkzP4BDLkRUArOERkbth6PWLcz4n%2FlK7Em2OnSq7BQif%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDI3NjY1NjQzMzE1MyIMa8aUmIzwhX0dMRr6Ko8F0c2ndEfcybSZqR729cCA5Kz2DvavHQ%2F0hXoRVXp9aqPZaYzXEW53XGfBvMZLSi9c33ExyNBwJzMWCxUcoBt%2BKaURJ4sXDwXdu2HVXoPJZBrjAuHgLnWiSw3TM4z%2FDXjca3fFpf12PFxlE42%2FbRBH4aeyO9guy7w40Jo1DfmdjxB%2FSflIo8H8YoiurlRb%2FH8XAfvkLuBcAiNos6JXwiHiZy0ndzU1iH7nzv6LLMVtTqN07lZbiTMNTJxyfeMCl7CvncKsE45Yms3JZQCl9uPFPurg9AVcqxR9EaKSwXpF3sA86w62MnZ%2BryToeaN5eB5ICw%2Bv0H%2FpUT5Qyv9YInXuCA%2BDmDQP6oaaADKVxduRWqF73MdBiju4awwOaK97izArz3gg7Dt4KVAxOZPqMgQX8XHT%2BXjxwEoHPMAwWR6flYHR8F5QtI6Klg5zEN41lFZcPYV9PdEJzDMsuFY9mU454Sjkz8sU6lnm5aWvMPrMwKxJ3EgpuzuLfpWr01cH1u4cpv1ZRoXkBoMwHkH%2Fb5TOcfHIwkWLSnDObzY8RRguyXWAnM7ModqpomHDhqNiwfufH%2FyqRRZCgq3Y3Icpb2%2F%2FV95n8gtjVu0eoE1%2F%2BnCZVIRQzZQn9uiYLLTApaBqlFDBLB04Ah%2FNP2%2FztH7Hx7KUezU1N6band%2FB%2F7qMusfKJabJH6zYkam0NDyj0ajxRmc8vmZZM4DmrekHiu9Lbl2UBcWgzNqlTjmfg7l95tBdBzIO0x9RJUyTq44%2BW%2Bny9kLN5JCRGiT5vckrHfgqESXspqvhB6HeiR815SuW2Cu5zcOKB8E%2BVcyfKovQicnpEhisLxQRXbwIaKg9sNu%2FQ%2FFamcIXIpRCdDNYTIV3Qbkg0TCJj6vMBjqyAQjc%2B0o7luLmJXIDhFhOaS1mdlKwP0z5jylpM0cLEotSmO4KqwfHa2cxVKrwyOnwHvYFGJJOxwTNlxkexAquIbB%2BkLb1hUrxSqvdQwFV4760CaTnWUiHysymJe607Trsr8AmNrbJLdFm3yJFlKqm%2FsmYD96SBQ7a9wlwYNYf7PA7Lefq5byGWTx8BDzciDr86xrAcg7HL034Qk8c%2FQAw%2BE1Mws%2FzHWq5Z4fr4TbWU0w7nFg%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260210T064515Z&X-Amz-SignedHeaders=host&X-Amz-Expires=899&X-Amz-Credential=ASIAUA2QCFAAU4V2Z3IY%2F20260210%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=be2de6d8667e935c14414291964809aa71d61908e98bed3557fe2c6756608975"
+
+response = requests.get(TRANSCRIPT_URL)
+data = response.json()
+
+# Extracting the transcript text
+transcript_text = data['results']["transcripts"][0]["transcript"]
+
+# Saving the transcript to a text file
+with open("backend/clean_transcript.txt", "w", encoding="utf-8") as file:
+    file.write(transcript_text)
+
+print("Clean transcript saved to backend/clean_transcript.txt")
