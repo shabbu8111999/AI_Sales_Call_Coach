@@ -2,35 +2,24 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
-USE_MOCK = True
+USE_MOCK = True 
 
 
 def load_transcript():
+    """Load pre-generated transcript"""
     with open("backend/clean_transcript.txt", "r", encoding="utf-8") as f:
         return f.read()
-    
-
-def load_rag():
-    embeddings = HuggingFaceEmbeddings(
-        model_name = "sentence-transformers/all-MiniLM-L6-v2"
-    )
-    return FAISS.load_local(
-        "vector_db",
-        embeddings,
-        allow_dangerous_deserialization=True
-    )
 
 
-def query_objection_knowledge(vector_db):
-    docs = vector_db.similarity_search(
-        "handling price objections and customer hesitation", k=3
-    )
-    return "\n".join([doc.page_content for doc in docs])
+def load_rag_snapshot():
+    """Lightweight RAG knowledge for production demo"""
+    with open("backend/rag_snapshot.txt", "r", encoding="utf-8") as f:
+        return f.read()
 
 
 def objection_analysis(transcript_text, rag_context):
     """
-    MOCKED Objection Expert reasoning
+    MOCKED Objection Expert reasoning (RAG-grounded)
     """
     return f"""
 DETECTED OBJECTIONS:
@@ -41,21 +30,19 @@ MISSED OPPORTUNITIES:
 - The salesperson did not clearly reframe the price in terms of value.
 - No strong reassurance or urgency was created.
 
-OBJECTION HANDLING BEST PRACTICES(FROM KNOWLEDGE BASE):
+OBJECTION HANDLING BEST PRACTICES (FROM KNOWLEDGE BASE):
 {rag_context}
-    """
+"""
 
 
 if __name__ == "__main__":
     transcript_text = load_transcript()
-    vector_db = load_rag()
-
-    rag_context = query_objection_knowledge(vector_db)
+    rag_context = load_rag_snapshot()
 
     if USE_MOCK:
         output = objection_analysis(transcript_text, rag_context)
     else:
         output = "Bedrock-based Objection Expert output"
 
-    print("Objection Expert Agent Output:")
+    print("\n===== OBJECTION EXPERT AGENT OUTPUT =====\n")
     print(output)
