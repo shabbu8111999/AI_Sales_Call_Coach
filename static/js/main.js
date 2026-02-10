@@ -16,11 +16,16 @@ function uploadAudio() {
     })
     .then(res => res.json())
     .then(data => {
+        if (data.error) {
+            alert("Backend error: " + data.error);
+            return;
+        }
+
         document.getElementById("transcript").innerText = data.transcript;
         document.getElementById("analysis").innerText = data.report;
     })
     .catch(err => {
-        alert("Error analyzing call");
+        alert("Network or server error. Check Render logs.");
         console.error(err);
     });
 }
