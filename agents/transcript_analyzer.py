@@ -1,3 +1,5 @@
+USE_MOCK = True
+
 import boto3
 import json
 
