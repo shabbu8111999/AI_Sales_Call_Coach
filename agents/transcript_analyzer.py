@@ -57,14 +57,17 @@ Transcript:
 
 if __name__ == "__main__":
     transcript = load_transcript()
-    #analysis = analyze_transcript(transcript)
 
-    analysis = """
-- The call is about a product introduction and pricing discussion.
-- The customer shows interest but is cautious.
-- The main concern is pricing and timing.
-- The overall tone is neutral with hesitation.
-"""
+    if USE_MOCK:
+
+        analysis = """
+    - The call is about a product introduction and pricing discussion.
+    - The customer shows interest but is cautious.
+    - The main concern is pricing and timing.
+    - The overall tone is neutral with hesitation.
+    """
+    else:
+        analysis = analyze_transcript(transcript)
 
     print("Transcript Analysis:")
     print(analysis)
