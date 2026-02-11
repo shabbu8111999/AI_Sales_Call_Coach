@@ -26,16 +26,16 @@ def generate_final_report():
     final_report = f"""
 ================ FINAL SALES CALL ANALYSIS REPORT ================
 
----------------- CALL SUMMARY ----------------
+ CALL SUMMARY 
 {transcript_analysis}
 
----------------- SALES COACH FEEDBACK ----------------
+ SALES COACH FEEDBACK 
 {sales_coach_output}
 
----------------- OBJECTIONS & MISSED OPPORTUNITIES ----------------
+ OBJECTIONS & MISSED OPPORTUNITIES 
 {objection_output}
 
----------------- RECOMMENDED NEXT ACTIONS ----------------
+ RECOMMENDED NEXT ACTIONS 
 - Follow up with the customer addressing pricing concerns clearly.
 - Ask deeper discovery questions to understand budget and timeline.
 - End future calls with a clear next step or closing question.
