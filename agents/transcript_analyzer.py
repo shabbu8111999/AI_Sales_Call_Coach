@@ -1,12 +1,14 @@
 import boto3
 import json
+import os
 
-USE_MOCK = True
+# No more mock mode
+USE_MOCK = False
 
-# Initializing Bedrock runtime client
+# Initialize Bedrock runtime client
 bedrock = boto3.client(
-    service_name = "bedrock-runtime",
-    region_name = "us-east-1"
+    service_name="bedrock-runtime",
+    region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 )
 
 MODEL_ID = "mistral.mistral-large-2402-v1:0"
@@ -16,57 +18,54 @@ def load_transcript():
     """Read Clean Transcript text"""
     with open("backend/clean_transcript.txt", "r", encoding="utf-8") as f:
         return f.read()
-    
+
 
 def analyze_transcript(transcript_text):
-    """Agent 1: Understand the Conversation"""
+    """Agent 1: Understand the Conversation using AWS Bedrock (Mistral)"""
 
     prompt = f"""
-You are a Transcript Analyzer AI.
+You are an expert Sales Call Transcript Analyzer.
 
-Read the sales call transcript below and answer clearly in simple bullet points:
+Analyze the following transcript and answer clearly in bullet points:
 
 1. What is the call about?
 2. What is the customer's main intent?
 3. What is the customer's main concern (if any)?
 4. Overall tone of the conversation (positive / neutral / negative)
 
+Be concise and structured.
+
 Transcript:
 {transcript_text}
 """
-    
+
     body = {
-        "prompt" : prompt,
-        "max_tokens" : 400,
-        "temperature" : 0.3
+        "prompt": prompt,
+        "max_tokens": 600,
+        "temperature": 0.3
     }
 
+    try:
+        response = bedrock.invoke_model(
+            modelId=MODEL_ID,
+            body=json.dumps(body),
+            contentType="application/json",
+            accept="application/json"
+        )
 
-    response = bedrock.invoke_model(
-        modelId = MODEL_ID,
-        body = json.dumps(body),
-        contentType = "application/json",
-        accept = "application/json"
-    )
+        response_body = json.loads(response["body"].read())
 
+        # Mistral format
+        return response_body["outputs"][0]["text"]
 
-    response_body = json.loads(response["body"].read())
-    return response_body["outputs"][0]["text"]
+    except Exception as e:
+        return f"Bedrock Error: {str(e)}"
 
 
 if __name__ == "__main__":
     transcript = load_transcript()
 
-    if USE_MOCK:
+    analysis = analyze_transcript(transcript)
 
-        analysis = """
-    - The call is about a product introduction and pricing discussion.
-    - The customer shows interest but is cautious.
-    - The main concern is pricing and timing.
-    - The overall tone is neutral with hesitation.
-    """
-    else:
-        analysis = analyze_transcript(transcript)
-
-    print("Transcript Analysis:")
+    print("===== TRANSCRIPT ANALYSIS =====")
     print(analysis)
