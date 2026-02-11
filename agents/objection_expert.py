@@ -80,5 +80,5 @@ if __name__ == "__main__":
 
     output = objection_analysis(transcript_text, rag_context)
 
-    print("\n===== OBJECTION EXPERT AGENT OUTPUT =====\n")
+    print("\n OBJECTION EXPERT AGENT OUTPUT \n")
     print(output)
