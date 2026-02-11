@@ -1,4 +1,4 @@
-from agents.transcript_analyzer import load_transcript
+from agents.transcript_analyzer import load_transcript, analyze_transcript
 from agents.sales_coach import sales_coach_analysis
 from agents.objection_expert import objection_analysis
 
@@ -7,23 +7,16 @@ def generate_final_report():
     # Load transcript
     transcript_text = load_transcript()
 
-    # Agent 1: Transcript Summary (mocked, stable)
-    transcript_analysis = """
-CALL SUMMARY:
-- The call focuses on introducing a product and discussing pricing.
-- The customer is interested but hesitant.
-- Overall tone is neutral with mild hesitation.
-"""
+    # -------- Agent 1: Transcript Analyzer (Bedrock) --------
+    transcript_analysis = analyze_transcript(transcript_text)
 
-    # Agent 2: Sales Coach
-    # RAG context is loaded INSIDE the agent (rag_snapshot.txt)
+    # -------- Agent 2: Sales Coach (Bedrock + RAG Snapshot) --------
     sales_coach_output = sales_coach_analysis(
         transcript_text=transcript_text,
         rag_context=""
     )
 
-    # Agent 3: Objection Expert
-    # RAG context is loaded INSIDE the agent (rag_snapshot.txt)
+    # -------- Agent 3: Objection Expert (Bedrock + RAG Snapshot) --------
     objection_output = objection_analysis(
         transcript_text=transcript_text,
         rag_context=""
@@ -33,6 +26,7 @@ CALL SUMMARY:
     final_report = f"""
 ================ FINAL SALES CALL ANALYSIS REPORT ================
 
+---------------- CALL SUMMARY ----------------
 {transcript_analysis}
 
 ---------------- SALES COACH FEEDBACK ----------------
