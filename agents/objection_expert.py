@@ -53,7 +53,7 @@ Be clear and professional.
 
     body = {
         "prompt": prompt,
-        "max_tokens": 700,
+        "max_tokens": 300,
         "temperature": 0.3
     }
 
