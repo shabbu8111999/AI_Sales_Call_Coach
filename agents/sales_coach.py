@@ -82,5 +82,5 @@ if __name__ == "__main__":
 
     output = sales_coach_analysis(transcript_text, rag_context)
 
-    print("\n===== SALES COACH AGENT OUTPUT =====\n")
+    print("\nSALES COACH AGENT OUTPUT\n")
     print(output)
