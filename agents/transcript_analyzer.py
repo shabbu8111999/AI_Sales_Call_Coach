@@ -67,5 +67,5 @@ if __name__ == "__main__":
 
     analysis = analyze_transcript(transcript)
 
-    print("===== TRANSCRIPT ANALYSIS =====")
+    print("\n TRANSCRIPT ANALYSIS ")
     print(analysis)
