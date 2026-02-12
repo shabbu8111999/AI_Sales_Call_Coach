@@ -49,11 +49,14 @@ def upload_audio():
         job_name = f"sales-job-{uuid.uuid4()}"
 
         # Start Transcription
+        file_extension = filename.split(".")[-1].lower()
+
         transcribe.start_transcription_job(
             TranscriptionJobName=job_name,
             Media={"MediaFileUri": media_uri},
-            MediaFormat="mp3",
-            LanguageCode="en-US",
+            MediaFormat=file_extension,
+            #LanguageCode="en-US",
+            IdentifyLanguage = True,
         )
 
         # Wait for completion

@@ -1,29 +1,35 @@
 import time
 import boto3
+import uuid
+import requests
+import json
 
 # Initialize Transcribe client
-transcribe = boto3.client("transcribe")
+transcribe = boto3.client("transcribe", region_name="us-east-1")
 
-# CHANGE THESE VALUES
-JOB_NAME = "sales-call-transcription-job"
+# CONFIG
 BUCKET_NAME = "sales-call-audio-bucket-shabareesh"
 AUDIO_FILE_KEY = "Conversation.mp3"
-LANGUAGE_CODE = "en-US"
 
-# S3 file URI
+# Generate unique job name
+JOB_NAME = f"sales-call-job-{uuid.uuid4()}"
+
+# Get file extension dynamically
+file_extension = AUDIO_FILE_KEY.split(".")[-1].lower()
+
 MEDIA_URI = f"s3://{BUCKET_NAME}/{AUDIO_FILE_KEY}"
 
 # Start transcription job
 transcribe.start_transcription_job(
     TranscriptionJobName=JOB_NAME,
     Media={"MediaFileUri": MEDIA_URI},
-    MediaFormat="mp3",
-    LanguageCode=LANGUAGE_CODE,
+    MediaFormat=file_extension,
+    IdentifyLanguage=True
 )
 
 print("Transcription job started...")
 
-# Wait for job to complete
+# Wait for completion
 while True:
     status = transcribe.get_transcription_job(
         TranscriptionJobName=JOB_NAME
@@ -33,16 +39,26 @@ while True:
         break
 
     print("Transcribing...")
-    time.sleep(10)
+    time.sleep(5)
 
-# Check result
-job_info = transcribe.get_transcription_job(
-    TranscriptionJobName=JOB_NAME
-)["TranscriptionJob"]
+if status == "FAILED":
+    print("Transcription failed")
+else:
+    transcript_url = transcribe.get_transcription_job(
+        TranscriptionJobName=JOB_NAME
+    )["TranscriptionJob"]["Transcript"]["TranscriptFileUri"]
 
-if job_info["TranscriptionJobStatus"] == "COMPLETED":
-    transcript_url = job_info["Transcript"]["TranscriptFileUri"]
     print("Transcription completed")
     print("Transcript URL:", transcript_url)
-else:
-    print("Transcription failed")
+
+    # Download transcript
+    response = requests.get(transcript_url)
+    transcript_json = response.json()
+
+    transcript_text = transcript_json["results"]["transcripts"][0]["transcript"]
+
+    # Save locally
+    with open("backend/clean_transcript.txt", "w", encoding="utf-8") as f:
+        f.write(transcript_text)
+
+    print("Transcript saved to backend/clean_transcript.txt")
