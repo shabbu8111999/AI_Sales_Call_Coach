@@ -1,10 +1,10 @@
 flask
 boto3
 langchain
-langchain-text-splitters
+#langchain-text-splitters
 langchain-community
-faiss-cpu
-sentence-transformers
+#faiss-cpu
+#sentence-transformers
 requests
 langchain-openai
 python-dotenv
