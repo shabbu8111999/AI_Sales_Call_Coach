@@ -2,26 +2,24 @@ import boto3
 import json
 import os
 
-# No more mock mode
-USE_MOCK = False
 
-# Initialize Bedrock runtime client
 bedrock = boto3.client(
     service_name="bedrock-runtime",
     region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
 )
 
-MODEL_ID = "mistral.mistral-large-2402-v1:0"
+MODEL_ID = "amazon.titan-embed-text-v1"
 
 
 def load_transcript():
-    """Read Clean Transcript text"""
     with open("backend/clean_transcript.txt", "r", encoding="utf-8") as f:
         return f.read()
 
 
 def analyze_transcript(transcript_text):
-    """Agent 1: Understand the Conversation using AWS Bedrock (Mistral)"""
+    """
+    Agent 1: Understand the Conversation using Claude 3 Haiku
+    """
 
     prompt = f"""
 You are an expert Sales Call Transcript Analyzer.
@@ -40,9 +38,15 @@ Transcript:
 """
 
     body = {
-        "prompt": prompt,
+        "anthropic_version": "bedrock-2023-05-31",
         "max_tokens": 300,
-        "temperature": 0.3
+        "temperature": 0.3,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
     }
 
     try:
@@ -55,8 +59,7 @@ Transcript:
 
         response_body = json.loads(response["body"].read())
 
-        # Mistral format
-        return response_body["outputs"][0]["text"]
+        return response_body["content"][0]["text"]
 
     except Exception as e:
         return f"Bedrock Error: {str(e)}"
@@ -64,7 +67,6 @@ Transcript:
 
 if __name__ == "__main__":
     transcript = load_transcript()
-
     analysis = analyze_transcript(transcript)
 
     print("\n TRANSCRIPT ANALYSIS ")
