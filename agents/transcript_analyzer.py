@@ -1,14 +1,6 @@
-import boto3
-import json
-import os
 
-
-bedrock = boto3.client(
-    service_name="bedrock-runtime",
-    region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
-)
-
-MODEL_ID = "amazon.titan-embed-text-v1"
+from langchain_core.prompts import PromptTemplate
+from llm_config import get_llm
 
 
 def load_transcript():
@@ -18,10 +10,12 @@ def load_transcript():
 
 def analyze_transcript(transcript_text):
     """
-    Agent 1: Understand the Conversation using Claude 3 Haiku
+    Agent 1: Understand the Conversation
     """
 
-    prompt = f"""
+    llm = get_llm()
+
+    prompt_template = PromptTemplate.from_template("""
 You are an expert Sales Call Transcript Analyzer.
 
 Analyze the following transcript and answer clearly in bullet points:
@@ -34,35 +28,18 @@ Analyze the following transcript and answer clearly in bullet points:
 Be concise and structured.
 
 Transcript:
-{transcript_text}
-"""
+{transcript}
+""")
 
-    body = {
-        "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 300,
-        "temperature": 0.3,
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ]
-    }
+    # Modern LCEL chain
+    chain = prompt_template | llm
 
     try:
-        response = bedrock.invoke_model(
-            modelId=MODEL_ID,
-            body=json.dumps(body),
-            contentType="application/json",
-            accept="application/json"
-        )
-
-        response_body = json.loads(response["body"].read())
-
-        return response_body["content"][0]["text"]
+        result = chain.invoke({"transcript": transcript_text})
+        return result.content
 
     except Exception as e:
-        return f"Bedrock Error: {str(e)}"
+        return f"OpenAI Error: {str(e)}"
 
 
 if __name__ == "__main__":
