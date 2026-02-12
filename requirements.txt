@@ -6,3 +6,5 @@ langchain-community
 faiss-cpu
 sentence-transformers
 requests
+langchain-openai
+python-dotenv

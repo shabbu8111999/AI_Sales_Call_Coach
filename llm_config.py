@@ -10,3 +10,21 @@ def get_llm_client():
         temperature=0.3,
         api_key=os.getenv("OPENAI_API_KEY")
     )
+
+# Test Block (Run this file directly to test)
+if __name__ == "__main__":
+    try:
+        print("Testing LLM connection...")
+
+        llm = get_llm_client()
+
+        # Simple test prompt
+        response = llm.invoke("Say hello in one short sentence.")
+
+        print("✅ Model is working!")
+        print("Response:")
+        print(response.content)
+
+    except Exception as e:
+        print("❌ Error occurred:")
+        print(str(e))
