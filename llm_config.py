@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def get_llm_client():
+def get_llm():
     return ChatOpenAI(
         model = "gpt-3.5-turbo",
         temperature=0.3,
@@ -15,7 +15,7 @@ def get_llm_client():
 #if __name__ == "__main__":
 #    try:
         #print("Testing LLM connection...")
-        #llm = get_llm_client()
+        #llm = get_llm()
         #response = llm.invoke("Say hello in one short sentence.")
 
         #print("Model is working!")
