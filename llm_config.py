@@ -11,20 +11,17 @@ def get_llm_client():
         api_key=os.getenv("OPENAI_API_KEY")
     )
 
-# Test Block (Run this file directly to test)
-if __name__ == "__main__":
-    try:
-        print("Testing LLM connection...")
+# Testing Block
+#if __name__ == "__main__":
+#    try:
+        #print("Testing LLM connection...")
+        #llm = get_llm_client()
+        #response = llm.invoke("Say hello in one short sentence.")
 
-        llm = get_llm_client()
+        #print("Model is working!")
+        #print("Response:")
+        #print(response.content)
 
-        # Simple test prompt
-        response = llm.invoke("Say hello in one short sentence.")
-
-        print("✅ Model is working!")
-        print("Response:")
-        print(response.content)
-
-    except Exception as e:
-        print("❌ Error occurred:")
-        print(str(e))
+    #except Exception as e:
+     #   print("Error occurred:")
+      #  print(str(e))
