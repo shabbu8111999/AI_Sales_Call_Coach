@@ -1,5 +1,5 @@
 from agents.transcript_analyzer import load_transcript, analyze_transcript
-from agents.sales_coach import sales_coach_analysis
+from agents.sales_coach import sales_coach_analysis, load_rag_snapshot
 from agents.objection_expert import objection_analysis
 
 
@@ -7,40 +7,36 @@ def generate_final_report():
     # Load transcript
     transcript_text = load_transcript()
 
-    # -------- Agent 1: Transcript Analyzer (Bedrock) --------
+    # Load lightweight RAG knowledge
+    rag_context = load_rag_snapshot()
+
+    # Agent 1: Transcript Analyzer
     transcript_analysis = analyze_transcript(transcript_text)
 
-    # -------- Agent 2: Sales Coach (Bedrock + RAG Snapshot) --------
+    # Agent 2: Sales Coach 
     sales_coach_output = sales_coach_analysis(
         transcript_text=transcript_text,
-        rag_context=""
+        rag_context=rag_context
     )
 
-    # -------- Agent 3: Objection Expert (Bedrock + RAG Snapshot) --------
+    # Agent 3: Objection Expert
     objection_output = objection_analysis(
         transcript_text=transcript_text,
-        rag_context=""
+        rag_context=rag_context
     )
 
-    # -------- Final Combined Report --------
+    # Final Combined Report
     final_report = f"""
-================ FINAL SALES CALL ANALYSIS REPORT ================
+ FINAL SALES CALL ANALYSIS REPORT
 
- CALL SUMMARY 
+---------------- CALL SUMMARY -----------------
 {transcript_analysis}
 
- SALES COACH FEEDBACK 
+---------------- SALES COACH FEEDBACK ----------------
 {sales_coach_output}
 
- OBJECTIONS & MISSED OPPORTUNITIES 
+---------------- OBJECTIONS & MISSED OPPORTUNITIES ----------------
 {objection_output}
-
- RECOMMENDED NEXT ACTIONS 
-- Follow up with the customer addressing pricing concerns clearly.
-- Ask deeper discovery questions to understand budget and timeline.
-- End future calls with a clear next step or closing question.
-
-===============================================================
 """
 
     return final_report
