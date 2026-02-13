@@ -33,6 +33,55 @@ The system uses modern LangChain orchestration and OpenAI LLM integration to pro
 
 ---
 
+## Setup Instructions
+### 1. Clone the Repository
+```bash
+git clone <The Github Reposirory link>
+After that use
+cd AI_Sales_Call_Coach (to your respective path)
+```
+
+### 2. Create a Virtual environment (I used UV)
+```bash
+uv init
+```
+After initializing UV, you can install the requirements or you can use pip in UV too.
+```bash
+uv add (the installation packages)
+```
+OR
+```bash
+uv venv
+```
+The first option will be more suitable.
+
+### 3. Configure Environment variables
+```bash
+setx AWS_ACCESS_KEY_ID=your_aws_key
+setx AWS_SECRET_ACCESS_KEY=your_aws_secret_key
+setx AWS_DEFAULT_REGION=us-east-1
+```
+I am doing it in the command prompt, so it uses setx to call the variables.
+
+Then I configure the OpenAI API Key in ".env file"
+```bash
+OPENAI_API_KEY="your_openai_key"
+```
+
+### 4. Run the Application
+```bash
+uv run app.py
+OR
+uv run python app.py
+```
+
+### 5. User Interface
+- Upload Audio files by clicking on "Choose file" and then clicking on "Analyze Call."
+- Wait for Transcription
+- View AI-Generated Report
+ 
+---
+
 ## Project Structure
 <pre>
 AI_Sales_Call_Coach/
